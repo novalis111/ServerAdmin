@@ -1,0 +1,8 @@
+# ServerAdmin Scripts
+Some scripts to help administer vHosts on a Debian System. They are tailored for fcgi, each with its own config. Adjust to your needs.
+
+## Usage
+1. Place everything into /etc/apache2/scripts/ (location doesn't matter)
+2. Add Group "web" to your system (addgroup web)
+3. Start adding webusers + vhosts with addwebuser + addvhost - they will tell you what to type
+4. Have fun
