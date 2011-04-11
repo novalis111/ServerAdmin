@@ -1,0 +1,27 @@
+#!/bin/bash
+if [ "$1" = "" ]
+	then
+		echo "Format: addvhost WEBUSER DOMAIN(ohne www.) DUMMY sub||www iso||utf"
+		exit 1
+fi
+
+# add default charset?
+if [ "$5" = "iso" ]
+  then
+    CHARSET="AddDefaultCharset iso-8859-15"
+	else
+		CHARSET=""
+fi
+
+STRIPPED=`expr match "$2" '\([^.]*\)'`
+sed "s/USERNAME/$1/;s/DOMAIN/$2/;s/CHARSET/$CHARSET/" $3 > /etc/apache2/sites-available/$2
+mkdir -p /var/www/$1/public_html/$2/web
+chown -R $1.web /var/www/$1/public_html/$2
+
+# only create awstats config for www domains
+if [ "$4" = "www" ]
+	then
+		sed "s/DOMAIN/$2/;s/STRIPPED/$STRIPPED/" 02-AWS-Dummy > /etc/awstats/awstats.$2.conf
+fi
+
+exit 0

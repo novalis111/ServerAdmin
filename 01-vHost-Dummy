@@ -1,0 +1,44 @@
+#
+# DOMAIN
+#
+<VirtualHost 1.2.3.4:80>
+  ServerName www.DOMAIN
+  ServerAlias DOMAIN 
+  ServerAdmin admin@DOMAIN
+
+  SuexecUserGroup USERNAME web
+
+  DirectoryIndex index.php index.htm index.html
+  CHARSET
+
+  DocumentRoot /var/www/USERNAME/public_html/DOMAIN/web
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride None
+  </Directory>
+  <Directory /var/www/USERNAME/public_html/DOMAIN/web>
+    FCGIWrapper /var/www/USERNAME/conf/php-fcgi .php
+    Options -Indexes FollowSymLinks MultiViews ExecCGI
+    AllowOverride FileInfo AuthConfig Limit Options
+    Order allow,deny
+    allow from all
+  </Directory>
+
+  ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+  <Directory "/usr/lib/cgi-bin">
+    AllowOverride None
+    Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  ErrorLog /var/log/apache2/error.log
+
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+
+  CustomLog /var/log/apache2/access.log combined
+  ServerSignature Off
+
+</VirtualHost>

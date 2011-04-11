@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ "$1" = "" ]
+	then
+		echo "Bitte Usernamen angeben als Parameter"
+		exit 1
+fi
+
+USERNAME=$1
+
+#echo $USERNAME
+#exit 0
+
+# Neuen Web-Benutzer anlegen
+echo "1. Lege neuen Benutzer $USERNAME an"
+adduser --home /var/www/$USERNAME --ingroup web --disabled-login --shell /bin/false $USERNAME
+
+echo "2. Erstelle Verzeichnis /var/www/$USERNAME und nötige Unterverzeichnisse"
+rm -r /var/www/$USERNAME
+mkdir -p /var/www/$USERNAME/conf
+mkdir -p /var/www/$USERNAME/public_html
+chown $USERNAME.web /var/www/$USERNAME/conf
+chown -R $USERNAME.web /var/www/$USERNAME/public_html
+
+echo "3. Kopiere php-wrapper\n\n"
+cp /etc/apache2/scripts/php-fcgi /var/www/$USERNAME/conf
+chown $USERNAME.web /var/www/$USERNAME/conf/php-fcgi
+chattr +i /var/www/$USERNAME/conf/php-fcgi
+
+echo "Jetzt noch den vHost erstellen, aktivieren und Apache neu starten :)"
+exit 0

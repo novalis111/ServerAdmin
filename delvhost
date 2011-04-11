@@ -1,0 +1,32 @@
+#!/bin/bash
+if [ "$1" = "" ]
+	then
+		echo "Bitte USER, DOMAIN (ohne www.) und keep||del angeben"
+		exit 1
+fi
+
+VHOST=/etc/apache2/sites-available/$2
+VFILES=/var/www/$1/public_html/$2
+AWFILE=/etc/awstats/awstats.$2.conf
+
+# first disable in apache
+a2dissite $2
+if [ -f $VHOST ]
+	then
+		rm -i $VHOST 
+fi
+
+# then del files + awstats if asked
+if [ "$3" = "del" ]
+	then
+		if [ -d $VFILES ]
+			then
+				rm -ri $VFILES
+		fi
+		if [ -f $AWFILE ]
+			then
+				rm -i $AWFILE
+		fi
+fi
+
+exit 0
